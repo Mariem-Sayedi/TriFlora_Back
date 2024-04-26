@@ -6,6 +6,7 @@ const {
   removeSpecificCartItem,
   clearCart,
   updateCartItemQuantity,
+  updateTotalPriceHandler
 } = require('../services/cartService');
 const authService = require('../services/authService');
 

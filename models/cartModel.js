@@ -14,13 +14,15 @@ const cartSchema = new mongoose.Schema(
         },
         color: String,
         price: Number,
+        title:String,
+        imageCover:String,
       },
     ],
     totalCartPrice: Number,
-    user: {
-      type: mongoose.Schema.ObjectId,
-      ref: 'User',
-    },
+    // user: {
+    //   type: mongoose.Schema.ObjectId,
+    //   ref: 'User',
+    // },
   },
   { timestamps: true }
 );

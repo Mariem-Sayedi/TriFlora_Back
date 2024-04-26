@@ -12,7 +12,7 @@ const userRoute= require('./routes/userRoute');
 const authRoute= require('./routes/authRoute');
 const cartRoute= require('./routes/cartRoute');
 const orderRoute= require('./routes/orderRoute');
-
+const cors = require('cors');
 
 //connect with db
 dbConnection();
@@ -28,6 +28,14 @@ if(process.env.NODE_ENV == 'development'){
     console.log(`mode: ${process.env.NODE_ENV}`);
 }
 
+app.use((req, res, next) => {
+    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000'); //  frontend domain
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    next();
+  });
+
+app.use(cors());
 
 
 //mount routes
