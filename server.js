@@ -3,7 +3,7 @@ const dotenv= require('dotenv');
 const morgan= require('morgan')
 
 
-dotenv.config({ path: 'config.env'});
+
 const dbConnection= require('./config/database');
 const categoryRoute= require('./routes/categoryRoute');
 const sellerRoute= require('./routes/sellerRoute');
@@ -14,6 +14,7 @@ const cartRoute= require('./routes/cartRoute');
 const orderRoute= require('./routes/orderRoute');
 const cors = require('cors');
 
+dotenv.config({ path: './.env' });
 //connect with db
 dbConnection();
 

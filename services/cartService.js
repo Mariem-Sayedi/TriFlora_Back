@@ -22,18 +22,12 @@ const calcTotalCartPrice = (cart) => {
 exports.addProductToCart = asyncHandler(async (req, res, next) => {
   try {
     const { productId, quantity, price } = req.body;
-    // const userId = req.userId; // Assuming you have user authentication middleware
-    // // Find the user's cart or create a new one if it doesn't exist
-    // let cart = await Cart.findOne({ user: userId });
-    // if (!cart) {
-    //   cart = new Cart({ user: userId, cartItems: [] });
-    // }
-
-    let cart= await Cart.findOne();
+    const userId = req.params.userId; // Assuming you have user authentication middleware
+    // Find the user's cart or create a new one if it doesn't exist
+    let cart = await Cart.findOne({ user: userId });
     if (!cart) {
-      cart = new Cart({ cartItems: [],totalCartPrice:0 });
+      cart = new Cart({ user: userId, cartItems: [] });
     }
-
 
     // Check if the product already exists in the cart
     const existingProductIndex = cart.cartItems.findIndex(item => item.product.toString() === productId);
@@ -47,7 +41,7 @@ exports.addProductToCart = asyncHandler(async (req, res, next) => {
         quantity:1,
         
         price,
-        // userId: userId,
+        user: userId,
       });
     }
 
@@ -74,12 +68,12 @@ exports.addProductToCart = asyncHandler(async (req, res, next) => {
 // @route   GET /api/v1/cart
 // @access  Private/User
 exports.getLoggedUserCart = asyncHandler(async (req, res, next) => {
-  // const cart = await Cart.findOne({ user: req.userId });
-  const cart = await Cart.findOne();
-
+  const cart = await Cart.findOne({ user: req.params.userId });
+ 
   if (!cart) {
     return next(
-      new ApiError(`There is no cart for this user id : ${req.userId}`, 404)
+      cart = new Cart({ user: userId, cartItems: [] })
+      
     );
   }
 

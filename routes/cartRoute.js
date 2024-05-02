@@ -14,14 +14,14 @@ const router = express.Router();
 
 //  router.use(authService.protect, authService.allowedTo('user'));
 router
-  .route('/')
+  .route('/:userId')
   .post(addProductToCart)
   .get(getLoggedUserCart)
   .delete(clearCart);
 
 
 router
-  .route('/:itemId')
+  .route('/:userId/:itemId')
   .put(updateCartItemQuantity)
   .delete(removeSpecificCartItem);
 

@@ -50,7 +50,7 @@ exports.createUser = async (req, res) => {
 
 exports.updateUser = async (req, res) => {
     const userId = req.params.id;
-    const slug =slugify(name);
+    
 
     try {
       const user = await UserModel.findByIdAndUpdate(userId, req.body, { new: true });

@@ -19,10 +19,10 @@ const cartSchema = new mongoose.Schema(
       },
     ],
     totalCartPrice: Number,
-    // user: {
-    //   type: mongoose.Schema.ObjectId,
-    //   ref: 'User',
-    // },
+    user: {
+      type: mongoose.Schema.ObjectId,
+      ref: 'User',
+    },
   },
   { timestamps: true }
 );
