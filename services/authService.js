@@ -10,7 +10,7 @@ const createToken = require('../utils/createToken');
 const dotenv= require('dotenv');
 dotenv.config({ path: './.env' });
 const jwtSecret = process.env.JWT_SECRET;
-
+const SellerRequestModel=require('../models/sellerRequestModel')
 
 
 // @desc signup
@@ -24,6 +24,14 @@ exports.signup = asyncHandler(async (req, res, next) => {
         password: req.body.password,
         role:req.body.role
     });
+    
+    if(user.role=='seller'){
+      await SellerRequestModel.create({ user: user._id });
+      // user.role='user';
+      // await user.save();
+    }
+    
+
     console.log("JWT Secret:", jwtSecret);
     
     const token = jwt.sign({ userId: user._id }, jwtSecret, {

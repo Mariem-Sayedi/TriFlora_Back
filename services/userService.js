@@ -1,6 +1,6 @@
 const UserModel = require('../models/userModel');
 const slugify = require('slugify');
-
+const SellerRequestModel=require('../models/sellerRequestModel')
 
 
 // @desc get list of users
@@ -14,6 +14,19 @@ exports.getUsers = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
+
+exports.getSellers = async (req, res) => {
+  try {
+    const sellers = await UserModel.find({ role: 'seller' });
+   
+    res.status(200).json({ success: true, data: sellers });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+};
+
+
 
 // @desc get one User by ID
 // @route get/api/v1/users/id
@@ -32,12 +45,30 @@ exports.getUserById = async (req, res) => {
   };
 
 
+
 // @desc create user
 // @route post /api/v1/users
 // @access private
+// exports.createUser = async (req, res) => {
+//   try {
+//     const user = await UserModel.create(req.body);
+//     res.status(201).json({ data: user });
+//   } catch (error) {
+//     res.status(400).json({ error: error.message });
+//   }
+// };
+
 exports.createUser = async (req, res) => {
   try {
-    const user = await UserModel.create(req.body);
+    const user =await UserModel.create(req.body);
+    console.log("user created",user)
+    if(user.role=='seller'){
+      await SellerRequestModel.create({ user: user._id });
+      user.role='user';
+      await user.save();
+    }
+    
+     
     res.status(201).json({ data: user });
   } catch (error) {
     res.status(400).json({ error: error.message });
@@ -83,3 +114,5 @@ deleteUser = async (req, res) => {
     }
   };
 
+
+                    

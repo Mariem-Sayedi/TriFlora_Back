@@ -30,6 +30,11 @@ const userSchema= new mongoose.Schema(
             enum: ['user', 'admin', 'seller'],
             default: "user",
         },
+        sellerRequestStatus: {
+            type: String,
+            enum: ['pending', 'approved', 'rejected'],
+            default: 'pending',
+        },
         passwordResetCode: String,
         passwordResetExpires: Date,
         passwordResetVerified: Boolean,
