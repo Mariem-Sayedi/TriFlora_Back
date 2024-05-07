@@ -162,3 +162,19 @@ deleteProduct = async (req, res) => {
     }
   };
 
+
+  exports.getProductsByCategory = async (req, res) => {
+    const { categoryId } = req.params;
+  
+    try {
+      
+      const products = await Product.find({ category: categoryId });
+  
+      res.status(200).json({ success:true,
+                             message:" product filtred successfully !" , 
+                             data: products });
+    } catch (error) {
+      res.status(500).json({ success: false, error: error.message, message:'Error while filtering products ' });
+    }
+  };
+
