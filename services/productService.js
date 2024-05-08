@@ -178,3 +178,29 @@ deleteProduct = async (req, res) => {
     }
   };
 
+  exports.searchProducts = async (req, res) => {
+    try {
+      const { keyword } = req.query;
+  
+      const features = new ApiFeatures(ProductModel.find(), req.query);
+      
+      features.search('Product');
+  
+      features.filter().sort().limitFields().paginate(await ProductModel.countDocuments());
+  
+      const products = await features.mongooseQuery;
+  
+      res.json({
+        status: 'success',
+        results: products.length,
+        data: {
+          products,
+        },
+      });
+    } catch (error) {
+      res.status(500).json({
+        status: 'error',
+        message: error.message,
+      });
+    }
+  };

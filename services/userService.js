@@ -1,7 +1,8 @@
 const UserModel = require('../models/userModel');
 const slugify = require('slugify');
 const SellerRequestModel=require('../models/sellerRequestModel')
-
+const fs = require('fs');
+const productModel = require('../models/productModel');
 
 // @desc get list of users
 // @route get /api/v1/users
@@ -78,21 +79,83 @@ exports.createUser = async (req, res) => {
 // @desc update User
 // @route put /api/v1/users
 // @access private
-
 exports.updateUser = async (req, res) => {
-    const userId = req.params.id;
+  const userId = req.params.id;
+
+  try {
+    let user = await UserModel.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    // Update user fields
+    user.name = req.fields.name || user.name;
+    user.email = req.fields.email || user.email;
+
+    // Check if photo exists in request
+    if (req.files && req.files.photo) {
+      const photo = req.files.photo;
+
+      // Check photo size
+      if (photo.size > 1000000) {
+        return res.status(500).json({ error: 'Photo should be less than 1MB' });
+      }
+
+      // Update user's photo data
+      user.photo.data = fs.readFileSync(photo.path);
+      user.photo.contentType = photo.type;
+    }
+
+    // Save updated user
+    await user.save();
+
+    // Respond with updated user data
+    res.status(200).json({ data: user });
+  } catch (error) {
+    console.error('Error updating user:', error);
+    res.status(400).json({ error: error.message });
+  }
+};
+
+
+exports.userPhotoController= async(req,res)=>{
+  try {
+      const user = await UserModel.findById(req.params.pid).select("photo")
+      if(user.photo.data){
+          res.set('Content-type',user.photo.contentType)
+          return res.status(200).send(user.photo.data)
+
+      }
+
+  } catch (error) {
+      console.log(error);
+      res.status(500).send({
+          success:false,
+          error,
+          message:'Error in getting user photo '
+      })
+  }
+}
+
+
+
+
+
+// exports.updateUser = async (req, res) => {
+//     const userId = req.params.id;
     
 
-    try {
-      const user = await UserModel.findByIdAndUpdate(userId, req.body, { new: true });
-      if (!user) {
-        return res.status(404).json({ error: 'User not found' });
-      }
-      res.status(200).json({ data: user });
-    } catch (error) {
-      res.status(400).json({ error: error.message });
-    }
-  };
+//     try {
+//       const user = await UserModel.findByIdAndUpdate(userId, req.body, { new: true });
+//       if (!user) {
+//         return res.status(404).json({ error: 'User not found' });
+//       }
+//       res.status(200).json({ data: user });
+//     } catch (error) {
+//       res.status(400).json({ error: error.message });
+//     }
+//   };
 
 
 
@@ -114,5 +177,6 @@ deleteUser = async (req, res) => {
     }
   };
 
-
+  
+  
                     

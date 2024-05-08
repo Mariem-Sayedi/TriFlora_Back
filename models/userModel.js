@@ -34,6 +34,10 @@ const userSchema= new mongoose.Schema(
             type: String,
             enum: ['pending', 'approved', 'rejected'],
             default: 'pending',
+        }, 
+        photo:{
+            data:Buffer,
+            contentType:String
         },
         passwordResetCode: String,
         passwordResetExpires: Date,

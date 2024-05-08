@@ -1,6 +1,6 @@
 const express= require('express');
-
-const {getUsers, createUser, getUserById, updateUser, getSellers}= require('../services/userService');
+const formidableMiddleware = require('express-formidable') 
+const {getUsers, createUser, getUserById, updateUser, getSellers, userPhotoController}= require('../services/userService');
 const router= express.Router();
 
 
@@ -11,9 +11,9 @@ router.post('/', createUser);
 router.route('/').get(getUsers).post(createUser);
 router.route('/:id').
 get(getUserById).
-put(updateUser).
+put(formidableMiddleware(),updateUser).
 delete(deleteUser);
 router.put('/sellerRequest/:userId');
-
+router.get('/user-photo/:pid',userPhotoController)
 
 module.exports= router;
